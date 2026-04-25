@@ -1,0 +1,71 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation [ref=e3]:
+      - link "xaudev" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - link "home" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "blogs" [ref=e7] [cursor=pointer]:
+          - /url: /blogs
+        - link "projects" [ref=e8] [cursor=pointer]:
+          - /url: /projects
+        - link "gallery" [ref=e9] [cursor=pointer]:
+          - /url: /gallery
+        - link "contact" [ref=e10] [cursor=pointer]:
+          - /url: /contact
+    - generic [ref=e12]:
+      - heading "👋 Sawasdee, I'm Nutt" [level=1] [ref=e13]:
+        - generic [ref=e14]: 👋
+        - text: Sawasdee, I'm Nutt
+      - paragraph [ref=e15]: sa-wat-dee (/sa.wǎt.diː/), Thai for "hello"
+      - paragraph [ref=e16]: I'm a developer, security researcher, designer and FPV pilot who enjoys building random things. including autonomous systems.
+      - paragraph [ref=e17]: From tools and bots to robotics and real world embedded projects.
+    - generic [ref=e18]:
+      - paragraph [ref=e19]: I work with tools and languages like
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: ✱
+          - text: FOXGLOVE
+        - generic [ref=e23]:
+          - generic [ref=e24]: 🐳
+          - text: Docker
+        - generic [ref=e25]:
+          - generic [ref=e26]: ▲
+          - text: Vercel
+        - generic [ref=e27]:
+          - generic [ref=e28]: 🚀
+          - text: Postman
+        - generic [ref=e29]:
+          - generic [ref=e30]: ☁️
+          - text: Cloudflare
+        - generic [ref=e31]:
+          - generic [ref=e32]: 🐍
+          - text: Python
+        - generic [ref=e33]:
+          - generic [ref=e34]: ⚡
+          - text: C++
+        - generic [ref=e35]:
+          - generic [ref=e36]: 📜
+          - text: Javascript
+        - generic [ref=e37]:
+          - generic [ref=e38]: 🎨
+          - text: Figma
+        - generic [ref=e39]:
+          - generic [ref=e40]: 📷
+          - text: Lightroom
+        - generic [ref=e41]:
+          - generic [ref=e42]: 🖼️
+          - text: Photoshop
+        - generic [ref=e43]:
+          - generic [ref=e44]: 🎬
+          - text: After Effects
+        - generic [ref=e45]:
+          - generic [ref=e46]: 🎞️
+          - text: Davinci Resolve
+      - link "View more →" [ref=e47] [cursor=pointer]:
+        - /url: /tools
+        - text: View more
+        - generic [ref=e48]: →
+  - button "Open Next.js Dev Tools" [ref=e54] [cursor=pointer]:
+    - img [ref=e55]

@@ -23,7 +23,7 @@ So I decided to design everything from scratch. The PCB, layout, controls, firmw
 
 This started as a small hardware experiment, but it slowly turned into a full custom MIDI controller.
 
-![SCH](/images/blogs/midi_SCH.png)
+![SCH](/images/blogs/midi_sch.png)
 
 ## Hardware
 

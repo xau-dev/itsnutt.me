@@ -17,11 +17,15 @@ export async function GET(req: NextRequest) {
 
   // Fetch fonts via HTTP (public files are served statically)
   const [domaineFont, aeonikRegular] = await Promise.all([
-    fetch(`${origin}/fonts/TestDomaineDisplayCondensed-Semibold-BF66174a2168254.otf`).then(
+    fetch(`${origin}/fonts/TestDomaineDisplayCondensed-Regular-BF66174a213eae4.otf`).then(
       (r) => r.arrayBuffer()
     ),
     fetch(`${origin}/fonts/Aeonik-Regular.ttf`).then((r) => r.arrayBuffer()),
   ]);
+
+  // Grid: 64px spacing (63px gap + 1px line), matching site exactly
+  const gridCols = Math.ceil(1200 / 64);
+  const gridRows = Math.ceil(630 / 64);
 
   return new ImageResponse(
     (
@@ -36,42 +40,35 @@ export async function GET(req: NextRequest) {
           position: "relative",
         }}
       >
-        {/* Subtle grid lines using borders */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            opacity: 0.03,
-          }}
-        >
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={`v-${i}`}
-              style={{
-                position: "absolute",
-                left: `${(i + 1) * 5}%`,
-                top: 0,
-                bottom: 0,
-                width: "1px",
-                backgroundColor: "#ffffff",
-              }}
-            />
-          ))}
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={`h-${i}`}
-              style={{
-                position: "absolute",
-                top: `${(i + 1) * 8}%`,
-                left: 0,
-                right: 0,
-                height: "1px",
-                backgroundColor: "#ffffff",
-              }}
-            />
-          ))}
-        </div>
+        {/* Grid lines — vertical (every 64px) */}
+        {Array.from({ length: gridCols }).map((_, i) => (
+          <div
+            key={`v-${i}`}
+            style={{
+              position: "absolute",
+              left: `${(i + 1) * 64}px`,
+              top: 0,
+              bottom: 0,
+              width: "1px",
+              backgroundColor: "rgba(255, 255, 255, 0.03)",
+            }}
+          />
+        ))}
+
+        {/* Grid lines — horizontal (every 64px) */}
+        {Array.from({ length: gridRows }).map((_, i) => (
+          <div
+            key={`h-${i}`}
+            style={{
+              position: "absolute",
+              top: `${(i + 1) * 64}px`,
+              left: 0,
+              right: 0,
+              height: "1px",
+              backgroundColor: "rgba(255, 255, 255, 0.03)",
+            }}
+          />
+        ))}
 
         {/* Top-right site branding */}
         <div
@@ -123,12 +120,12 @@ export async function GET(req: NextRequest) {
             </div>
           )}
 
-          {/* Title */}
+          {/* Title — thinner weight (400) */}
           <h1
             style={{
               fontSize: "58px",
               fontFamily: "'Test Domaine Display Condensed'",
-              fontWeight: 600,
+              fontWeight: 400,
               color: "#ffffff",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
@@ -204,7 +201,7 @@ export async function GET(req: NextRequest) {
         {
           name: "Test Domaine Display Condensed",
           data: domaineFont,
-          weight: 600,
+          weight: 400,
           style: "normal",
         },
         {

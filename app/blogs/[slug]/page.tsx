@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     readTime: post.readTime,
     tags: post.tags.join(","),
   });
-  const ogImageUrl = `/api/og?${ogParams.toString()}`;
+  const ogImageUrl = `https://itsnutt.me/api/og?${ogParams.toString()}`;
 
   return {
     title: `${post.title} | Nutt`,

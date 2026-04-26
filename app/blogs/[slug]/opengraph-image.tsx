@@ -39,10 +39,10 @@ function formatDate(dateString: string): string {
 }
 
 function fontSize(t: string): number {
-  if (t.length <= 40) return 58;
-  if (t.length <= 70) return 50;
-  if (t.length <= 100) return 42;
-  return 34;
+  if (t.length <= 35) return 72;
+  if (t.length <= 60) return 60;
+  if (t.length <= 90) return 48;
+  return 40;
 }
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
@@ -70,15 +70,16 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const fontDir = path.join(process.cwd(), "public", "fonts");
 
   const domaineFont = fs.readFileSync(
-    path.join(fontDir, "TestDomaineDisplayCondensed-Regular-BF66174a213eae4.otf")
+    path.join(fontDir, "TestDomaineDisplayCondensed-Semibold-BF66174a2168254.otf")
   );
   const aeonikFont = fs.readFileSync(
-    path.join(fontDir, "Aeonik-Regular.ttf")
+    path.join(fontDir, "Aeonik-Medium.ttf")
   );
 
-  // Grid: 64px spacing matching site bg-grid-lines
-  const gridCols = Math.ceil(1200 / 64);
-  const gridRows = Math.ceil(630 / 64);
+  // Sparse grid: every 128px for cleaner look
+  const gridStep = 128;
+  const gridCols = Math.ceil(1200 / gridStep);
+  const gridRows = Math.ceil(630 / gridStep);
 
   return new ImageResponse(
     (
@@ -89,37 +90,37 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#000000",
-          padding: "60px",
+          padding: "72px 80px",
           position: "relative",
           fontFamily: "'Aeonik', sans-serif",
         }}
       >
-        {/* Grid lines — vertical (every 64px) */}
+        {/* Grid lines — vertical (every 128px) */}
         {Array.from({ length: gridCols }).map((_, i) => (
           <div
             key={`v-${i}`}
             style={{
               position: "absolute",
-              left: `${(i + 1) * 64}px`,
+              left: `${(i + 1) * gridStep}px`,
               top: 0,
               bottom: 0,
               width: "1px",
-              backgroundColor: "rgba(255, 255, 255, 0.03)",
+              backgroundColor: "rgba(255, 255, 255, 0.04)",
             }}
           />
         ))}
 
-        {/* Grid lines — horizontal (every 64px) */}
+        {/* Grid lines — horizontal (every 128px) */}
         {Array.from({ length: gridRows }).map((_, i) => (
           <div
             key={`h-${i}`}
             style={{
               position: "absolute",
-              top: `${(i + 1) * 64}px`,
+              top: `${(i + 1) * gridStep}px`,
               left: 0,
               right: 0,
               height: "1px",
-              backgroundColor: "rgba(255, 255, 255, 0.03)",
+              backgroundColor: "rgba(255, 255, 255, 0.04)",
             }}
           />
         ))}
@@ -128,10 +129,10 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div
           style={{
             position: "absolute",
-            top: "40px",
-            right: "60px",
-            fontSize: "18px",
-            color: "#525252",
+            top: "48px",
+            right: "80px",
+            fontSize: "20px",
+            color: "#737373",
             fontFamily: "'Aeonik', sans-serif",
             letterSpacing: "-0.02em",
           }}
@@ -146,7 +147,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             flexDirection: "column",
             justifyContent: "center",
             flex: 1,
-            gap: "28px",
+            gap: "32px",
           }}
         >
           {/* Tags */}
@@ -158,11 +159,11 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    padding: "6px 14px",
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                    background: "rgba(255, 255, 255, 0.03)",
-                    color: "#a3a3a3",
-                    fontSize: "14px",
+                    padding: "8px 16px",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    background: "rgba(255, 255, 255, 0.04)",
+                    color: "#d4d4d4",
+                    fontSize: "16px",
                     fontFamily: "'Aeonik', sans-serif",
                     borderRadius: "15px",
                   }}
@@ -179,7 +180,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               color: "#ffffff",
               fontSize: fontSize(title),
               fontFamily: "'Test Domaine Display Condensed', serif",
-              fontWeight: 400,
+              fontWeight: 600,
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
               maxWidth: "1000px",
@@ -192,11 +193,11 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           {excerpt && (
             <div
               style={{
-                color: "#a3a3a3",
-                fontSize: "22px",
+                color: "#d4d4d4",
+                fontSize: "26px",
                 fontFamily: "'Aeonik', sans-serif",
                 lineHeight: 1.5,
-                maxWidth: "850px",
+                maxWidth: "900px",
               }}
             >
               {excerpt}
@@ -210,32 +211,32 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "12px",
+            gap: "14px",
             marginTop: "auto",
-            paddingTop: "40px",
-            borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+            paddingTop: "36px",
+            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
           }}
           >
             {date && (
               <span
                 style={{
-                  fontSize: "16px",
+                  fontSize: "18px",
                   fontFamily: "'Aeonik', sans-serif",
-                  color: "#525252",
+                  color: "#a3a3a3",
                 }}
               >
                 {date}
               </span>
             )}
             {date && readTime && (
-              <span style={{ color: "#404040", fontSize: "16px" }}>•</span>
+              <span style={{ color: "#525252", fontSize: "18px" }}>•</span>
             )}
             {readTime && (
               <span
                 style={{
-                  fontSize: "16px",
+                  fontSize: "18px",
                   fontFamily: "'Aeonik', sans-serif",
-                  color: "#525252",
+                  color: "#a3a3a3",
                 }}
               >
                 {readTime}
@@ -252,13 +253,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         {
           name: "Test Domaine Display Condensed",
           data: domaineFont,
-          weight: 400,
+          weight: 600,
           style: "normal",
         },
         {
           name: "Aeonik",
           data: aeonikFont,
-          weight: 400,
+          weight: 500,
           style: "normal",
         },
       ],

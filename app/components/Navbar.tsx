@@ -22,7 +22,7 @@ const navLinks: NavLink[] = [
   { type: "scroll", id: "home", label: "home" },
   { type: "link", href: "/blogs", label: "blogs" },
   { type: "scroll", id: "projects", label: "projects" },
-  { type: "link", href: "/gallery", label: "gallery" },
+  { type: "link", href: "/logs", label: "logs" },
   { type: "scroll", id: "contact", label: "contact" },
 ];
 

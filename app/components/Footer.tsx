@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ScrollReveal from "../components/ScrollReveal";
 
 const navLinks = [
   { href: "/", label: "home" },
   { href: "/blogs", label: "blogs" },
-  { href: "/projects", label: "projects" },
-  { href: "/gallery", label: "gallery" },
-  { href: "/contact", label: "contact" },
+  { href: "/#projects", label: "projects" },
+  { href: "/logs", label: "logs" },
+  { href: "/#contact", label: "contact" },
 ];
 
 export default function Footer() {
@@ -80,8 +81,47 @@ export default function Footer() {
           </div>
         </ScrollReveal>
 
-        {/* Right side - Navigation */}
+        {/* Middle - Friends */}
         <ScrollReveal direction="up" delay={0.1}>
+          <div>
+            <p className="text-neutral-500 text-sm mb-3" style={{ fontFamily: "var(--font-aeonik)" }}>
+              friends & people
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="https://itsnutt.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/button/xaudev.png"
+                  alt="itsnutt.me"
+                  width={88}
+                  height={31}
+                  className="rounded"
+                />
+              </Link>
+              <Link
+                href="https://tinywifi.cc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="https://www.tinywifi.cc/images/buttons/tinywifi.png"
+                  alt="tinywifi"
+                  width={88}
+                  height={31}
+                  className="rounded"
+                />
+              </Link>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Right side - Navigation */}
+        <ScrollReveal direction="up" delay={0.2}>
           <div className="flex flex-col gap-3" style={{ fontFamily: "var(--font-aeonik)" }}>
             {navLinks.map((link) => (
               <Link

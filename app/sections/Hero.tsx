@@ -22,8 +22,8 @@ const polaroids: PolaroidData[] = [
   },
   {
     id: 1,
-    image: "/images/test.png",
-    caption: "FPV Racing Setup",
+    image: "/images/logs/ss.jpg",
+    caption: "Testing Mavlink integration",
     bgColor: "bg-neutral-50",
   },
   {

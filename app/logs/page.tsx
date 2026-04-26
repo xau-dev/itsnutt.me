@@ -14,50 +14,32 @@ interface GalleryItem {
 
 // Gallery data with metadata
 const galleryItems: GalleryItem[] = [
-  {
-    id: "1",
-    src: "/images/drone.png",
-    title: "Autonomous Drone Build",
+     {
+    id: "3",
+    src: "/images/logs/ss.jpg",
+    title: "first fight",
     description:
-      "Pixhawk 6X flight controller paired with Raspberry Pi 5 running ROS 2. This setup handles autonomous waypoint navigation, obstacle avoidance with LiDAR, and real-time telemetry. Built for a university research project on swarm coordination.",
-    date: "Apr 2026",
-    category: "Robotics",
+      "Got Mavlink working and had a successful flight",
+    date: "Mar 2026",
+    category: "Project updates",
+  },
+    {
+    id: "1",
+    src: "/images/logs/first.jpg",
+    title: "First look at the drone",
+    description:
+      "First look at the drone build, super excited to get this flying",
+    date: "Mar 2026",
+    category: "Project updates",
   },
   {
     id: "2",
-    src: "/images/test.png",
-    title: "Portfolio Site V2",
+    src: "/images/logs/soldering.jpg",
+    title: "Soldering the motors up n stuff",
     description:
-      "A complete redesign of my personal site built with Next.js 16, Tailwind CSS v4, and motion. Features smooth scroll, draggable polaroid stack, scroll-triggered animations, and a blog system with markdown support.",
-    date: "Apr 2026",
-    category: "Web Dev",
-  },
-  {
-    id: "3",
-    src: "/icons/davinci.png",
-    title: "Video Production Setup",
-    description:
-      "DaVinci Resolve workflow for color grading FPV drone footage. Custom LUTs and node trees for cinematic look. Also experimenting with Fusion for motion graphics.",
-    date: "Apr 2026",
-    category: "Creative",
-  },
-  {
-    id: "4",
-    src: "/icons/cloudflare.png",
-    title: "Infrastructure Stack",
-    description:
-      "Cloudflare Workers + Pages for edge deployment. Using R2 for object storage, D1 for SQLite at the edge, and KV for caching. Zero cold starts, global distribution.",
-    date: "Apr 2026",
-    category: "DevOps",
-  },
-  {
-    id: "5",
-    src: "/icons/Vercel.png",
-    title: "Vercel Deployments",
-    description:
-      "Experimenting with Next.js 16 on Vercel. Testing the new React 19 features, server components, and the latest caching strategies. Also trying out the new analytics.",
-    date: "Apr 2026",
-    category: "Web Dev",
+      "a step closer to the finsihed build",
+    date: "Mar 2026",
+    category: "Project updates",
   },
 ];
 
@@ -227,7 +209,7 @@ export default function GalleryPage() {
               className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-4"
               style={{ fontFamily: "var(--font-domaine-condensed)" }}
             >
-              Gallery
+              Personal Logs
             </h1>
             <p className="text-neutral-400 text-lg" style={{ fontFamily: "var(--font-aeonik)" }}>
               A timeline of builds, projects, and experiments

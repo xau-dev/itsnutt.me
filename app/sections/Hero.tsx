@@ -60,17 +60,28 @@ export default function Hero() {
   const dragStartPos = useRef({ x: 0, y: 0 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const clickHandled = useRef(false);
   
   // Motion values for drag - no constraints, free drag
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
-  // Spring physics for smooth drag
-  const springX = useSpring(x, { stiffness: 300, damping: 25 });
-  const springY = useSpring(y, { stiffness: 300, damping: 25 });
+  // Spring physics for smooth drag with recoil
+  const springX = useSpring(x, { 
+    stiffness: 150, 
+    damping: 15,
+    mass: 0.8,
+    restDelta: 0.001 
+  });
+  const springY = useSpring(y, { 
+    stiffness: 150, 
+    damping: 15,
+    mass: 0.8,
+    restDelta: 0.001 
+  });
   
-  // Rotation based on drag velocity
-  const rotate = useTransform(springX, [-300, 300], [-20, 20]);
+  // Rotation based on drag velocity with more swing
+  const rotate = useTransform(springX, [-400, 400], [-25, 25]);
   
   // Track mouse position relative to polaroid container
   useEffect(() => {
@@ -110,6 +121,7 @@ export default function Hero() {
   
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     dragStartPos.current = { x: e.clientX, y: e.clientY };
+    clickHandled.current = false;
     setIsDragging(false);
   }, []);
   
@@ -118,7 +130,8 @@ export default function Hero() {
     const dy = Math.abs(e.clientY - dragStartPos.current.y);
     
     // If moved less than 5px, treat as click
-    if (dx < 5 && dy < 5 && !isDragging) {
+    if (dx < 5 && dy < 5 && !isDragging && !clickHandled.current) {
+      clickHandled.current = true;
       setCurrentIndex((prev) => (prev + 1) % polaroids.length);
       // Reset timer on manual click
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -198,7 +211,7 @@ export default function Hero() {
             <motion.div
               drag
               dragMomentum={false}
-              dragElastic={0.05}
+              dragElastic={0.15}
               onDragStart={handleDragStart}
               onPointerDown={handlePointerDown}
               onPointerUp={handlePointerUp}
@@ -230,23 +243,6 @@ export default function Hero() {
                   </div>
                 </motion.div>
               )}
-
-              {/* Click overlay - covers entire stack */}
-              <div 
-                className="absolute inset-0 z-40 cursor-pointer"
-                style={{ 
-                  top: '-20px', 
-                  left: '-20px', 
-                  right: '-20px', 
-                  bottom: '-40px' 
-                }}
-                onClick={(e) => {
-                  // Only handle click if not dragging
-                  if (!isDragging) {
-                    cyclePolaroid();
-                  }
-                }}
-              />
 
               {/* Back layers - 3 polaroids peeking from behind */}
               {visiblePolaroids.slice(1).map((polaroid, i) => (

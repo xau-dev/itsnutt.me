@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px;
+      height: 630px;
+      background: #000000;
+      background-image: 
+        repeating-linear-gradient(to right, transparent, transparent 63px, rgba(255,255,255,0.03) 63px, rgba(255,255,255,0.03) 64px),
+        repeating-linear-gradient(to bottom, transparent, transparent 63px, rgba(255,255,255,0.03) 63px, rgba(255,255,255,0.03) 64px);
+      display: flex;
+      flex-direction: column;
+      padding: 80px 96px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #171717;
+      border: 1px solid #262626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ededed;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .site-name {
+      color: #a3a3a3;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    .title {
+      color: #ededed;
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #262626;
+      padding-top: 32px;
+      margin-top: 48px;
+    }
+    .domain { color: #a3a3a3; font-size: 18px; font-weight: 500; }
+    .author { color: #ededed; font-size: 18px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">N</div>
+    <div class="site-name">itsnutt.me</div>
+  </div>
+  <div class="title">Building Autonomous Drones with ROS and ArduPilot</div>
+  <div class="footer">
+    <div class="domain">itsnutt.me</div>
+    <div class="author">xaudev</div>
+  </div>
+</body>
+</html>

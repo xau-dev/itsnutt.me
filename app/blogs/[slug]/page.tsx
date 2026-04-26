@@ -25,6 +25,30 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   return {
     title: `${post.title} | Nutt`,
     description: post.excerpt,
+    openGraph: {
+      title: `${post.title} | Nutt`,
+      description: post.excerpt,
+      url: `https://itsnutt.me/blogs/${slug}`,
+      siteName: "itsnutt.me",
+      images: [
+        {
+          url: post.thumbnail || "/images/drone.png",
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      locale: "en_US",
+      type: "article",
+      publishedTime: post.date,
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | Nutt`,
+      description: post.excerpt,
+      images: [post.thumbnail || "/images/drone.png"],
+    },
   };
 }
 

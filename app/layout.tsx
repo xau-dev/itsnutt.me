@@ -15,6 +15,29 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "xaudev - Nutt's Portfolio",
   description: "Developer, security researcher, designer and FPV pilot",
+  metadataBase: new URL("https://itsnutt.me"),
+  openGraph: {
+    title: "xaudev - Nutt's Portfolio",
+    description: "Developer, security researcher, designer and FPV pilot",
+    url: "https://itsnutt.me",
+    siteName: "itsnutt.me",
+    images: [
+      {
+        url: "/images/test.png",
+        width: 1200,
+        height: 630,
+        alt: "xaudev portfolio",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "xaudev - Nutt's Portfolio",
+    description: "Developer, security researcher, designer and FPV pilot",
+    images: ["/images/test.png"],
+  },
 };
 
 export default function RootLayout({

@@ -22,15 +22,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     };
   }
 
-  const ogParams = new URLSearchParams({
-    title: post.title,
-    excerpt: post.excerpt,
-    date: post.date,
-    readTime: post.readTime,
-    tags: post.tags.join(","),
-  });
-  const ogImageUrl = `https://itsnutt.me/api/og?${ogParams.toString()}`;
-
   return {
     title: `${post.title} | Nutt`,
     description: post.excerpt,
@@ -39,14 +30,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       description: post.excerpt,
       url: `https://itsnutt.me/blogs/${slug}`,
       siteName: "itsnutt.me",
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
       locale: "en_US",
       type: "article",
       publishedTime: post.date,
@@ -56,7 +39,6 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       card: "summary_large_image",
       title: `${post.title} | Nutt`,
       description: post.excerpt,
-      images: [ogImageUrl],
     },
   };
 }

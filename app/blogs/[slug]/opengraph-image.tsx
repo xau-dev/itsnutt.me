@@ -39,10 +39,10 @@ function formatDate(dateString: string): string {
 }
 
 function fontSize(t: string): number {
-  if (t.length <= 35) return 72;
-  if (t.length <= 60) return 60;
-  if (t.length <= 90) return 48;
-  return 40;
+  if (t.length <= 30) return 84;
+  if (t.length <= 55) return 72;
+  if (t.length <= 80) return 60;
+  return 48;
 }
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
@@ -131,8 +131,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             position: "absolute",
             top: "48px",
             right: "80px",
-            fontSize: "20px",
-            color: "#737373",
+            fontSize: "28px",
+            color: "#a3a3a3",
             fontFamily: "'Aeonik', sans-serif",
             letterSpacing: "-0.02em",
           }}
@@ -152,18 +152,18 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         >
           {/* Tags */}
           {tags.length > 0 && (
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               {tags.slice(0, 4).map((tag) => (
                 <span
                   key={tag}
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    padding: "8px 16px",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    padding: "10px 20px",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
                     background: "rgba(255, 255, 255, 0.04)",
-                    color: "#d4d4d4",
-                    fontSize: "16px",
+                    color: "#e5e5e5",
+                    fontSize: "22px",
                     fontFamily: "'Aeonik', sans-serif",
                     borderRadius: "15px",
                   }}
@@ -194,7 +194,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             <div
               style={{
                 color: "#d4d4d4",
-                fontSize: "26px",
+                fontSize: "32px",
                 fontFamily: "'Aeonik', sans-serif",
                 lineHeight: 1.5,
                 maxWidth: "900px",
@@ -211,32 +211,32 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "14px",
+            gap: "16px",
             marginTop: "auto",
             paddingTop: "36px",
-            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
           }}
           >
             {date && (
               <span
                 style={{
-                  fontSize: "18px",
+                  fontSize: "24px",
                   fontFamily: "'Aeonik', sans-serif",
-                  color: "#a3a3a3",
+                  color: "#d4d4d4",
                 }}
               >
                 {date}
               </span>
             )}
             {date && readTime && (
-              <span style={{ color: "#525252", fontSize: "18px" }}>•</span>
+              <span style={{ color: "#737373", fontSize: "24px" }}>•</span>
             )}
             {readTime && (
               <span
                 style={{
-                  fontSize: "18px",
+                  fontSize: "24px",
                   fontFamily: "'Aeonik', sans-serif",
-                  color: "#a3a3a3",
+                  color: "#d4d4d4",
                 }}
               >
                 {readTime}

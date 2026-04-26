@@ -116,6 +116,34 @@ export default function Footer() {
                   className="rounded"
                 />
               </Link>
+              <Link
+                href="https://dspl.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="https://dspl.me/88x31.png"
+                  alt="dspl"
+                  width={88}
+                  height={31}
+                  className="rounded"
+                />
+              </Link>
+              <Link
+                href="https://khaodoes.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="https://khaodoes.dev/88x31.png"
+                  alt="khaodoes.dev"
+                  width={88}
+                  height={31}
+                  className="rounded"
+                />                
+              </Link>              
             </div>
           </div>
         </ScrollReveal>

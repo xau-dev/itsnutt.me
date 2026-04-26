@@ -13,7 +13,7 @@ const contactChannels = [
 const socials = [
   { icon: "/icons/figma.svg", label: "@xaudev", href: "https://figma.com/@xaudev" },
   { icon: "/icons/twitter.svg", label: "@xaudev", href: "#" },
-  { icon: "/icons/github.svg", label: "@MrGolddev", href: "https://github.com/xau-dev" },
+  { icon: "/icons/github.svg", label: "@xau-dev", href: "https://github.com/xau-dev" },
 ];
 
 export default function Contact() {

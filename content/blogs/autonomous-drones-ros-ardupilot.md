@@ -1,64 +1,56 @@
 ---
-title: "Building Autonomous Drones with ROS and ArduPilot"
-excerpt: "A deep dive into setting up a fully autonomous drone system using ROS for high-level control and ArduPilot for flight management. Lessons learned from 6 months of testing."
+title: "Building an Autonomous Drone with ROS and ArduPilot"
+excerpt: "My autonomous drone project using ArduPilot, ROS 2, MAVLink, Raspberry Pi, and vision based landing."
 date: "2026-01-15"
-readTime: "8 min read"
+readTime: "4 min read"
 tags: ["Robotics", "Drones", "Project"]
 thumbnail: "/images/drone.png"
 ---
 
-# Building Autonomous Drones with ROS and ArduPilot
+# Building an Autonomous Drone with ROS and ArduPilot
 
-**Goal :** Build a autonomous drone to complete waypoints, auto takeoff/landing using aruco code to guide the drone
+**Goal:** Build an autonomous drone that can fly waypoints, take off by itself, and land using ArUco marker detection.
 
-**Status now :** Hardware done, heavy on auto takeoff/landing right now
+**Status now:** The main hardware is done. Right now I am focusing on auto takeoff, auto landing, and making the system reliable in real tests.
+
+![Drone setup showing flight controller, Raspberry Pi, and camera](/images/drone.png)
+
+MicroAir H743 running ArduPilot with AM32 ESCs, Raspberry Pi 4, ROS 2, and a depth camera.
 
 ## The Stack
 
-- **ArduPilot** for flight control and low-level navigation
-- **AM32** for the ESC to compute motors
-- **ROS 2** for high-level mission planning and sensor fusion
-- **MAVLink** for communication between the flight controller and onboard computer
-- **Raspberry Pi 4 with 4gb ram** as the onboard computer for auto landing
-- **2.4g Lora** for the telementry/manual controls instead of the usual 9xx mHz lora 
-- **Depth Camera** for autolanding, Aruco code detection
+The drone uses ArduPilot for flight control, GPS navigation, failsafes, and return to home. It uses AM32 on the ESC side, ROS 2 for mission logic and computer vision, MAVLink for communication, and a Raspberry Pi 4 as the onboard computer.
 
-## Why This Combination?
+For telemetry and manual control, I am using 2.4GHz LoRa instead of the usual 900MHz telemetry setup. A depth camera is used for ArUco marker detection and landing tests.
 
-ArduPilot handles the critical flight control tasks, stabilization, GPS navigation, failsafes. 
-ROS handles the higher-level decision making,  mission planning, computer vision.
+## Why This Stack?
 
-![Drone setup showing Pixhawk flight controller and Raspberry Pi](/images/drone.png)
-*The flight stack: MicroAir H734 running ArduPilot & AM32 + Raspberry Pi 4 with ROS 2* with depth camera
+ArduPilot handles the stable flight layer. ROS 2 handles the experimental autonomy layer, like vision processing and mission logic.
 
-## Key Challenges
+I separated them because I do not want experimental code directly controlling the flight controller. The flight controller should stay reliable, while the onboard computer handles higher level logic like vision and mission decisions.
 
-### 1. Latency
-The biggest issue was communication latency between ROS and ArduPilot. MAVLink is efficient, but running through a USB connection introduces delays.
+## Main Challenges
 
-**Solution:** Switched to UART communication at 921600 baud. Reduced latency from ~50ms to ~10ms.
+The first challenge is communication. MAVLink works well, but the link still needs to stay stable during real flight. I use UART at 921600 baud for onboard communication and lowered the packet rate to avoid flooding the connection.
 
-### 2. Sensor Fusion
-GPS alone isn't enough for precise indoor navigation.
+The second challenge is auto landing. GPS is not accurate enough to land on a specific target, so the plan is to use a depth camera to detect ArUco markers and send guidance data back to ArduPilot.
 
-**Solution:** Added a LiDAR and IMU, fused everything with an Extended Kalman Filter (EKF) in ROS.
+The third challenge is vision reliability. Lighting, vibration, camera angle, and motion blur can all affect marker detection. A lot of the work is testing camera placement and making the landing logic safer when the marker is lost.
 
-### 3. Safety
-When things go wrong with autonomous drones, they go wrong fast.
+Safety is also a big part of the project. The setup needs geofence, return to home on signal loss, and manual override so the drone can fall back safely if autonomy fails.
 
-**Solution:** Multiple failsafes — geofence, return-to-home on signal loss, and a physical kill switch.
+## Current Progress
 
-## Results
+Right now, the main hardware build is finished. The project has the ArduPilot flight stack, Raspberry Pi onboard computer, MAVLink communication, ROS 2 direction, depth camera setup, and 2.4GHz LoRa telemetry.
 
-The drone can now:
-- Take off and land autonomously
-- Follow GPS waypoints with ±1m accuracy
-- Avoid obstacles using LiDAR
-- Return home safely on any failure
+The drone is not fully done yet. The main focus is making takeoff, landing, and vision guidance reliable enough for repeated testing.
 
-![Test flight waypoint mission](/images/test.png)
-*Screenshot of a completed autonomous waypoint mission in QGroundControl*
+![Waypoint mission testing in QGroundControl](/images/test.png)
 
-## What's Next
+Waypoint mission testing and flight monitoring in QGroundControl.
 
-Working on swarm coordination — multiple drones flying in formation with collision avoidance.
+## Next Step
+
+Next, I want to mount a GoPro under the drone to collect footage for AI training.
+
+The bigger goal is to use the drone for agriculture, especially detecting crop or plant issues from aerial footage. For now, the priority is reliable flight, landing, and data collection before making the AI side more serious.

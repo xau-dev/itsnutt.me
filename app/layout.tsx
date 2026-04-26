@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "itsnutt.me",
     images: [
       {
-        url: "/images/test.png",
+        url: "/images/embed.png",
         width: 1200,
         height: 630,
         alt: "xaudev portfolio",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "xaudev - Nutt's Portfolio",
     description: "Developer, security researcher, designer and FPV pilot",
-    images: ["/images/test.png"],
+    images: ["/images/embed.png"],
   },
 };
 

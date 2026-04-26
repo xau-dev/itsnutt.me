@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import ScrollProgress from "./components/ScrollProgress";
 import Hero from "./sections/Hero";
 import TechStack from "./sections/TechStack";
 import Projects from "./sections/Projects";
@@ -10,6 +11,7 @@ import Footer from "./components/Footer";
 export default function Home() {
   return (
     <div className="min-h-full bg-grid-lines relative">
+      <ScrollProgress />
       <div className="max-w-[1400px] mx-auto relative z-10">
         <Navbar />
         <Hero />

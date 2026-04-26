@@ -42,16 +42,16 @@ function ToolItem({ tool }: any) {
 
   export default function TechStack() {
     return (
-      <section className="relative -top-4 md:-top-8 lg:-top-12 px-8 md:px-16 lg:px-24 pt-0 pb-12">
+      <section className="relative -top-4 md:-top-8 lg:-top-12 px-4 sm:px-8 md:px-16 lg:px-24 pt-0 pb-12">
         <ScrollReveal direction="up">
-          <p className="text-neutral-300 text-lg leading-relaxed mb-6">
+          <p className="text-neutral-300 text-base sm:text-lg leading-relaxed mb-6">
             I work with tools and languages like
           </p>
         </ScrollReveal>
-  
+
         <div className="flex flex-col gap-3 mb-3" style={{ fontFamily: "var(--font-aeonik)" }}>
           <ScrollReveal direction="up" delay={0.1}>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {tools.slice(0, 4).map((tool) => (
                 <ToolItem key={tool.name || tool.icon} tool={tool} />
               ))}
@@ -59,7 +59,7 @@ function ToolItem({ tool }: any) {
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={0.15}>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {tools.slice(4, 8).map((tool) => (
                 <ToolItem key={tool.name || tool.icon} tool={tool} />
               ))}
@@ -67,7 +67,7 @@ function ToolItem({ tool }: any) {
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={0.2}>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {tools.slice(8, 13).map((tool) => (
                 <ToolItem key={tool.name || tool.icon} tool={tool} />
               ))}

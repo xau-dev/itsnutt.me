@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import ScrollReveal from "../components/ScrollReveal";
+import SkeletonImage from "../components/SkeletonImage";
 
 interface PolaroidData {
   id: number;
@@ -142,12 +143,12 @@ export default function Hero() {
   ];
 
   return (
-    <section id="home" className="px-8 md:px-16 lg:px-24 pt-40 pb-0 overflow-visible">
+    <section id="home" className="px-4 sm:px-8 md:px-16 lg:px-24 pt-32 sm:pt-40 pb-0 overflow-visible">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 md:gap-10">
         <div className="max-w-2xl md:flex-1">
           <ScrollReveal direction="up" delay={0.1}>
             <h1
-              className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-2"
+              className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight mb-2"
               style={{ fontFamily: "var(--font-domaine)", fontWeight: 400 }}
             >
               👋 Sawasdee, I&apos;m Nutt
@@ -186,11 +187,11 @@ export default function Hero() {
           </ScrollReveal>
         </div>
 
-        {/* Draggable Polaroid Stack */}
-        <ScrollReveal direction="up" delay={0.5}>
+        {/* Draggable Polaroid Stack - hidden on mobile */}
+        <ScrollReveal direction="up" delay={0.5} className="hidden md:block">
           <div 
             ref={containerRef}
-            className="relative"
+            className="relative w-full md:w-auto flex justify-center md:justify-start"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
@@ -251,7 +252,7 @@ export default function Hero() {
               {visiblePolaroids.slice(1).map((polaroid, i) => (
                 <motion.div
                   key={`back-${polaroid.id}-${currentIndex}`}
-                  className={`absolute w-72 lg:w-[22rem] ${polaroid.bgColor} rounded-sm p-3 pb-4 shadow-lg pointer-events-none`}
+                  className={`absolute w-64 sm:w-72 lg:w-[22rem] ${polaroid.bgColor} rounded-sm p-3 pb-4 shadow-lg pointer-events-none`}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ 
                     opacity: 1, 
@@ -277,14 +278,14 @@ export default function Hero() {
 
               {/* Main polaroid - current */}
               <motion.div 
-                className={`relative w-72 lg:w-[22rem] ${visiblePolaroids[0].bgColor} rounded-sm p-3.5 lg:p-4 pb-5 lg:pb-6 shadow-2xl z-10 pointer-events-none`}
+                className={`relative w-64 sm:w-72 lg:w-[22rem] ${visiblePolaroids[0].bgColor} rounded-sm p-3.5 lg:p-4 pb-5 lg:pb-6 shadow-2xl z-10 pointer-events-none`}
                 animate={{ 
                   rotate: [-2, 1, -1, 2][currentIndex % 4],
                 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
                 <div className="relative w-full aspect-square bg-neutral-200 overflow-hidden rounded-sm">
-                  <Image
+                  <SkeletonImage
                     src={visiblePolaroids[0].image}
                     alt={visiblePolaroids[0].caption}
                     fill

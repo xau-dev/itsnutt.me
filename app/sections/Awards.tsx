@@ -89,10 +89,10 @@ export default function Awards() {
   }, []);
 
   return (
-    <section className="px-8 md:px-16 lg:px-24 py-16 overflow-hidden">
+    <section className="px-4 sm:px-8 md:px-16 lg:px-24 py-12 sm:py-16 overflow-hidden">
       <ScrollReveal direction="up">
         <h2
-          className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-10 text-center"
+          className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight mb-6 sm:mb-10 text-center"
           style={{ fontFamily: "var(--font-domaine-condensed)" }}
         >
           Awards &amp; Recognitions

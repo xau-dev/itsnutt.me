@@ -13,8 +13,8 @@ const navLinks = [
 
 export default function Footer() {
   return (
-    <footer className="py-12 px-8 md:px-16 lg:px-24 border-t border-neutral-800">
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+    <footer className="py-8 sm:py-12 px-4 sm:px-8 md:px-16 lg:px-24 border-t border-neutral-800">
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 sm:gap-8">
         {/* Left side */}
         <ScrollReveal direction="up">
           <div>

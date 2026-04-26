@@ -18,15 +18,21 @@ const socials = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-16">
-      <div className="max-w-xl mx-auto text-center">
+    <section id="contact" className="py-12 sm:py-16">
+      <div className="max-w-xl mx-auto text-center px-4 sm:px-8">
         <ScrollReveal direction="up">
           <h2
-            className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight mb-4"
             style={{ fontFamily: "var(--font-domaine-condensed)" }}
           >
             Contact
           </h2>
+        </ScrollReveal>
+
+        <ScrollReveal direction="up" delay={0.1}>
+          <p className="text-neutral-400 text-sm sm:text-base mb-6 sm:mb-10">
+            Open to projects, collaborations, or just a quick chat. I don&apos;t bite, just reach out.
+          </p>
         </ScrollReveal>
 
         <ScrollReveal direction="up" delay={0.1}>

@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import ScrollReveal from "../components/ScrollReveal";
+import SkeletonImage from "../components/SkeletonImage";
 
 const projects = [
   {
@@ -24,10 +24,10 @@ const projects = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="px-8 md:px-16 lg:px-24 py-16">
+    <section id="projects" className="px-4 sm:px-8 md:px-16 lg:px-24 py-12 sm:py-16">
       <ScrollReveal direction="up">
         <h2
-          className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-10"
+          className="text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight mb-6 sm:mb-10"
           style={{ fontFamily: "var(--font-domaine-condensed)" }}
         >
           What I&apos;ve Built
@@ -42,7 +42,7 @@ export default function Projects() {
               style={{ borderRadius: "15px" }}
             >
               <div className="relative aspect-video overflow-hidden">
-                <Image
+                <SkeletonImage
                   src={project.image}
                   alt={project.title}
                   fill

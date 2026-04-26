@@ -1,114 +1,101 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
+import { getAllPosts } from "@/lib/blogs";
 import ScrollReveal from "../components/ScrollReveal";
+import SkeletonImage from "../components/SkeletonImage";
 
 interface BlogPost {
-  id: string;
+  slug: string;
   title: string;
   excerpt: string;
   date: string;
   readTime: string;
   tags: string[];
-  slug: string;
+  thumbnail?: string;
 }
 
-const blogPosts: BlogPost[] = [
-  {
-    id: "1",
-    title: "Building Autonomous Drones with ROS and ArduPilot",
-    excerpt: "A deep dive into setting up a fully autonomous drone system using ROS for high-level control and ArduPilot for flight management. Lessons learned from 6 months of testing.",
-    date: "Jan 15, 2026",
-    readTime: "8 min read",
-    tags: ["Robotics", "Drones", "ROS"],
-    slug: "autonomous-drones-ros-ardupilot",
-  },
-  {
-    id: "2",
-    title: "FPV Drone Racing: From Zero to 120km/h",
-    excerpt: "My journey getting into FPV drone racing. The crashes, the builds, and the moment it finally clicked. Plus a guide to building your first racing quad.",
-    date: "Dec 28, 2025",
-    readTime: "6 min read",
-    tags: ["FPV", "Drones", "Racing"],
-    slug: "fpv-drone-racing-guide",
-  },
-  {
-    id: "3",
-    title: "Computer Vision for Object Detection on Edge Devices",
-    excerpt: "Running YOLO on a Raspberry Pi 5 for real-time object detection. Optimizing models, handling thermal throttling, and achieving 30fps on a $80 board.",
-    date: "Dec 10, 2025",
-    readTime: "10 min read",
-    tags: ["AI", "Computer Vision", "Edge Computing"],
-    slug: "cv-object-detection-edge",
-  },
-  {
-    id: "4",
-    title: "Security Research: Finding Vulnerabilities in IoT Devices",
-    excerpt: "How I approach IoT security testing. From firmware extraction to finding critical vulnerabilities in consumer devices. A practical guide for beginners.",
-    date: "Nov 22, 2025",
-    readTime: "12 min read",
-    tags: ["Security", "IoT", "Research"],
-    slug: "iot-security-research",
-  },
-  {
-    id: "5",
-    title: "Designing PCBs with KiCad: A Beginner's Journey",
-    excerpt: "From zero electronics knowledge to designing my first 4-layer PCB. The mistakes I made, the resources that helped, and the board that actually worked.",
-    date: "Nov 05, 2025",
-    readTime: "7 min read",
-    tags: ["Hardware", "PCB", "KiCad"],
-    slug: "pcb-design-kicad-beginner",
-  },
-  {
-    id: "6",
-    title: "Why I Switched from Firebase to Supabase for My Projects",
-    excerpt: "After 2 years with Firebase, I made the switch. Here's what I gained, what I lost, and why PostgreSQL at the edge changed how I build applications.",
-    date: "Oct 18, 2025",
-    readTime: "5 min read",
-    tags: ["Backend", "Database", "DevOps"],
-    slug: "firebase-to-supabase",
-  },
-];
-
 function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+  const hasThumbnail = !!post.thumbnail;
+
   return (
-    <ScrollReveal direction="up" delay={0.1 * index}>
+    <ScrollReveal direction="up" delay={0.05 * index}>
       <Link href={`/blogs/${post.slug}`}>
         <article
-          className="group border border-neutral-800 bg-neutral-900/30 backdrop-blur-sm p-6 hover:border-neutral-700 transition-all duration-300 h-full flex flex-col"
+          className={`group border border-neutral-800 bg-neutral-900/30 backdrop-blur-sm overflow-hidden hover:border-neutral-700 transition-all duration-300 h-full flex flex-col ${
+            hasThumbnail ? "" : "p-4 sm:p-5"
+          }`}
           style={{ borderRadius: "15px" }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-neutral-500 text-sm" style={{ fontFamily: "var(--font-aeonik)" }}>
-              {post.date}
-            </span>
-            <span className="text-neutral-700">•</span>
-            <span className="text-neutral-500 text-sm" style={{ fontFamily: "var(--font-aeonik)" }}>
-              {post.readTime}
-            </span>
-          </div>
+          {/* Thumbnail */}
+          {hasThumbnail && (
+            <div className="relative aspect-[16/10] overflow-hidden">
+              <SkeletonImage
+                src={post.thumbnail!}
+                alt={post.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 to-transparent" />
 
-          <h2 
-            className="text-white text-xl font-medium mb-3 group-hover:text-neutral-300 transition-colors leading-snug"
-            style={{ fontFamily: "var(--font-aeonik)" }}
-          >
-            {post.title}
-          </h2>
+              {/* Date badge on thumbnail */}
+              <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                <span
+                  className="px-2.5 py-0.5 bg-neutral-900/80 backdrop-blur-sm text-neutral-300 text-xs"
+                  style={{ borderRadius: "12px", fontFamily: "var(--font-aeonik)" }}
+                >
+                  {post.date}
+                </span>
+              </div>
+            </div>
+          )}
 
-          <p className="text-neutral-400 text-sm leading-relaxed mb-4 flex-1">
-            {post.excerpt}
-          </p>
+          <div className={hasThumbnail ? "p-4 sm:p-5" : ""}>
+            {/* Date/Read time for non-thumbnail cards */}
+            {!hasThumbnail && (
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-neutral-500 text-xs" style={{ fontFamily: "var(--font-aeonik)" }}>
+                  {post.date}
+                </span>
+                <span className="text-neutral-700">•</span>
+                <span className="text-neutral-500 text-xs" style={{ fontFamily: "var(--font-aeonik)" }}>
+                  {post.readTime}
+                </span>
+              </div>
+            )}
 
-          <div className="flex flex-wrap gap-2 mt-auto">
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="inline-flex items-center px-3 py-1 border border-neutral-800 bg-neutral-900/50 text-neutral-400 text-xs hover:border-neutral-700 hover:text-neutral-300 transition-colors"
-                style={{ borderRadius: "15px", fontFamily: "var(--font-aeonik)" }}
-              >
-                {tag}
-              </span>
-            ))}
+            <h2
+              className="text-white text-base sm:text-lg font-medium mb-2 group-hover:text-neutral-300 transition-colors leading-snug line-clamp-2"
+              style={{ fontFamily: "var(--font-aeonik)" }}
+            >
+              {post.title}
+            </h2>
+
+            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-3 flex-1 line-clamp-2">
+              {post.excerpt}
+            </p>
+
+            <div className="flex items-center justify-between mt-auto">
+              <div className="flex flex-wrap gap-1.5">
+                {post.tags.slice(0, 2).map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center px-2 py-0.5 border border-neutral-800 bg-neutral-900/50 text-neutral-400 text-xs hover:border-neutral-700 hover:text-neutral-300 transition-colors"
+                    style={{ borderRadius: "12px", fontFamily: "var(--font-aeonik)" }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {post.tags.length > 2 && (
+                  <span className="text-neutral-600 text-xs">+{post.tags.length - 2}</span>
+                )}
+              </div>
+
+              {hasThumbnail && (
+                <span className="text-neutral-500 text-xs" style={{ fontFamily: "var(--font-aeonik)" }}>
+                  {post.readTime}
+                </span>
+              )}
+            </div>
           </div>
         </article>
       </Link>
@@ -116,7 +103,9 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
   );
 }
 
-export default function BlogsPage() {
+export default async function BlogsPage() {
+  const posts = await getAllPosts();
+
   return (
     <div className="min-h-full bg-grid-lines relative">
       <div className="max-w-[1400px] mx-auto relative z-10 px-4 sm:px-8 md:px-16 lg:px-24 py-16">
@@ -129,7 +118,7 @@ export default function BlogsPage() {
             >
               <span>←</span> Back to home
             </Link>
-            
+
             <h1
               className="text-4xl md:text-5xl font-normal text-white tracking-tight mb-4"
               style={{ fontFamily: "var(--font-domaine-condensed)" }}
@@ -142,9 +131,9 @@ export default function BlogsPage() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {blogPosts.map((post, index) => (
-            <BlogCard key={post.id} post={post} index={index} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {posts.map((post, index) => (
+            <BlogCard key={post.slug} post={post} index={index} />
           ))}
         </div>
       </div>

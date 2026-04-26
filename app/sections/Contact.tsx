@@ -7,7 +7,7 @@ import ScrollReveal from "../components/ScrollReveal";
 const contactChannels = [
   { icon: "/icons/Discord.svg", label: "Discord", href: "https://discord.com/users/1133402776290992158" },
   { icon: "/icons/Instagram.svg", label: "Instagram", href: "https://www.instagram.com/xau_dev/" },
-  { icon: "/icons/mail.svg", label: "mrgolddev@gmail.com", href: "mailto:mrgolddev@gmail.com" },
+  { icon: "/icons/mail.svg", label: "hi@itsnutt.me", href: "mailto:hi@itsnutt.me" },
 ];
 
 const socials = [
@@ -31,12 +31,6 @@ export default function Contact() {
 
         <ScrollReveal direction="up" delay={0.1}>
           <p className="text-neutral-400 text-sm sm:text-base mb-6 sm:mb-10">
-            Open to projects, collaborations, or just a quick chat. I don&apos;t bite, just reach out.
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal direction="up" delay={0.1}>
-          <p className="text-neutral-400 text-base mb-10">
             Open to projects, collaborations, or just a quick chat. I don&apos;t bite, just reach out.
           </p>
         </ScrollReveal>

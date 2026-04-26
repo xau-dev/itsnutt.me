@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ScrollReveal from "../components/ScrollReveal";
 
@@ -12,6 +13,39 @@ const navLinks = [
 ];
 
 export default function Footer() {
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Fetch visitor count from GoatCounter API
+    const fetchVisitorCount = async () => {
+      try {
+        // GoatCounter API endpoint for total visits
+        const response = await fetch('https://xaudev.goatcounter.com/api/v0/stats/hits', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          // GoatCounter returns total hits
+          setVisitorCount(data.total || data.count || 0);
+        } else {
+          // Fallback: try to get from the count.js global
+          if (typeof window !== 'undefined' && (window as any).goatcounter) {
+            const count = (window as any).goatcounter.count;
+            if (count) setVisitorCount(count);
+          }
+        }
+      } catch (error) {
+        console.log('Could not fetch visitor count');
+      }
+    };
+
+    fetchVisitorCount();
+  }, []);
+
   return (
     <footer className="py-8 sm:py-12 px-4 sm:px-8 md:px-16 lg:px-24 border-t border-neutral-800">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 sm:gap-8">
@@ -28,6 +62,7 @@ export default function Footer() {
             <p className="text-neutral-500 text-sm mt-2">
               &copy; 2026 xaudev All rights reserved.
             </p>
+            
             <div className="flex items-center gap-4 mt-4">
               <Link
                 href="https://github.com/xau-dev/itsnutt.me"

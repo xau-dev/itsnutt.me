@@ -307,6 +307,17 @@ export default function Hero() {
               whileDrag={{ scale: 1.05, cursor: "grabbing" }}
               className="relative group cursor-grab active:cursor-grabbing touch-none select-none"
             >
+              {/* Invisible full-size hit area for dragging */}
+              <div 
+                className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing"
+                style={{ 
+                  top: '-40px', 
+                  left: '-40px', 
+                  right: '-40px', 
+                  bottom: '-60px' 
+                }}
+              />
+
               {/* Floating hint that follows mouse */}
               {isHovering && !isDragging && !hasDragged && (
                 <motion.div

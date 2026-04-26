@@ -31,6 +31,11 @@ export default function RootLayout({
         <SmoothScrollProvider options={{ lerp: 0.08, wheelMultiplier: 0.7 }}>
           {children}
         </SmoothScrollProvider>
+        <script
+          data-goatcounter="https://xaudev.goatcounter.com/count"
+          async
+          src="//gc.zgo.at/count.js"
+        />
       </body>
     </html>
   );

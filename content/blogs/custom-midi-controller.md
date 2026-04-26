@@ -1,26 +1,29 @@
 ---
 title: "Built My Own Custom MIDI Controller for Fun"
-excerpt: "A small custom MIDI controller project with PCB design, soldering, firmware, and a config app."
+excerpt: "A small custom MIDI controller project inspired by the OP-1, built with PCB design, soldering, firmware, and a config app."
 date: "2026-04-26"
 readTime: "3 min read"
 tags: ["PCB", "Designing", "Project"]
 thumbnail: "/images/blogs/midi_render.png"
 ---
 
-
-**Goal:** Build a custom MIDI controller from scratch, including the PCB, soldering, firmware, and config software.
+**Goal:** Build a custom MIDI controller from scratch, including the PCB, layout, soldering, firmware, and config software.
 
 **Status now:** The first version works. It still needs polish, but the main hardware and software are already there.
 
 ![Custom MIDI controller render](/images/blogs/midi.png)
 
-An assembled version of the pcb board
+An assembled version of the PCB board.
 
 ## The Idea
 
-I wanted to build this because MIDI controllers are cool, but making one myself sounded way more fun than just buying one.
+I saw the Teenage Engineering OP-1 and got really interested in its design. The way it looks simple, premium and clean made me want to try building my own music controller instead of just buying one.
 
-The project started as a small hardware experiment, but it slowly turned into a full device with a custom PCB, controls, firmware, and a config app.
+So I decided to design everything from scratch. The PCB, layout, controls, firmware, and config app were all part of the build.
+
+This started as a small hardware experiment, but it slowly turned into a full custom MIDI controller.
+
+![SCH](/images/blogs/midi_SCH.png)
 
 ## Hardware
 
@@ -28,8 +31,8 @@ The controller uses a custom PCB with buttons, rotary encoders, diodes, and a mi
 
 Some parts looked simple in the design, but were annoying during real assembly and testing. That was probably the biggest lesson: PCB design is not just about making the schematic work. It also has to be easy to build and debug.
 
-
 ![PCB](/images/blogs/midi_pcb.png)
+
 ![Soldering components](/images/blogs/solder.png)
 
 Turns out SMD was a better option than soldering everything manually.

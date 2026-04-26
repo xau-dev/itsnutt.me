@@ -143,7 +143,21 @@ export default function Footer() {
                   height={31}
                   className="rounded"
                 />                
-              </Link>              
+              </Link> 
+              <Link
+                href="https://passionseed.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/button/passion.png"
+                  alt="passionseed.org"
+                  width={88}
+                  height={31}
+                  className="rounded"
+                />
+              </Link>             
             </div>
           </div>
         </ScrollReveal>

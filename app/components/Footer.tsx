@@ -30,7 +30,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-4 mt-4">
               <Link
-                href="#"
+                href="https://github.com/xau-dev/itsnutt.me"
                 className="text-neutral-400 text-sm hover:text-white transition-colors underline underline-offset-4"
               >
                 View source code

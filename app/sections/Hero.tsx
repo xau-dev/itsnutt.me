@@ -61,27 +61,51 @@ export default function Hero() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const clickHandled = useRef(false);
+  const polaroidRef = useRef<HTMLDivElement>(null);
   
   // Motion values for drag - no constraints, free drag
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
+  // Track grab point for rotation based on where you grab
+  const grabOffset = useRef({ x: 0, y: 0 });
+  const polaroidSize = useRef({ width: 0, height: 0 });
+  
   // Spring physics for smooth drag with recoil
   const springX = useSpring(x, { 
-    stiffness: 150, 
-    damping: 15,
-    mass: 0.8,
+    stiffness: 100, 
+    damping: 10,
+    mass: 1.5,
     restDelta: 0.001 
   });
   const springY = useSpring(y, { 
-    stiffness: 150, 
-    damping: 15,
-    mass: 0.8,
+    stiffness: 100, 
+    damping: 10,
+    mass: 1.5,
     restDelta: 0.001 
   });
   
-  // Rotation based on drag velocity with more swing
-  const rotate = useTransform(springX, [-400, 400], [-25, 25]);
+  // Corner-based rotation: when you grab a corner, it rotates around that point
+  const cornerRotate = useMotionValue(0);
+  const springCornerRotate = useSpring(cornerRotate, { 
+    stiffness: 60, 
+    damping: 8,
+    mass: 2,
+  });
+  
+  // Velocity-based rotation for swing effect
+  const velocityRotate = useMotionValue(0);
+  const springVelocityRotate = useSpring(velocityRotate, {
+    stiffness: 40,
+    damping: 6,
+    mass: 3,
+  });
+  
+  // Combine rotations
+  const totalRotation = useTransform(
+    [springCornerRotate, springVelocityRotate],
+    ([corner, velocity]) => (corner as number) + (velocity as number)
+  );
   
   // Track mouse position relative to polaroid container
   useEffect(() => {
@@ -123,7 +147,59 @@ export default function Hero() {
     dragStartPos.current = { x: e.clientX, y: e.clientY };
     clickHandled.current = false;
     setIsDragging(false);
-  }, []);
+    
+    // Calculate grab point relative to polaroid center (normalized -1 to 1)
+    if (polaroidRef.current) {
+      const rect = polaroidRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      polaroidSize.current = { width: rect.width, height: rect.height };
+      
+      // Normalize to -1 (left/top) to 1 (right/bottom)
+      grabOffset.current = {
+        x: (e.clientX - centerX) / (rect.width / 2),
+        y: (e.clientY - centerY) / (rect.height / 2),
+      };
+      
+      // Apply initial corner rotation
+      const cornerX = grabOffset.current.x;
+      const cornerY = grabOffset.current.y;
+      
+      // Calculate rotation based on which corner/side was grabbed
+      // Top-left corner → rotates counter-clockwise
+      // Top-right corner → rotates clockwise
+      // Bottom corners → opposite rotation
+      const cornerRotation = (cornerX * cornerY * 15) + (cornerX * 8);
+      cornerRotate.set(cornerRotation);
+    }
+  }, [cornerRotate]);
+  
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDragging) return;
+    
+    // Calculate velocity-based rotation (swing effect)
+    const velocityX = e.movementX;
+    const velocityY = e.movementY;
+    
+    // Swing in the direction of movement
+    const swingRotation = velocityX * 0.8 + (velocityY * 0.3);
+    velocityRotate.set(swingRotation);
+    
+    // Update corner rotation based on new position
+    if (polaroidRef.current) {
+      const rect = polaroidRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const currentOffsetX = (e.clientX - centerX) / (rect.width / 2);
+      const currentOffsetY = (e.clientY - centerY) / (rect.height / 2);
+      
+      // Dynamic corner rotation that changes as you drag
+      const dynamicRotation = (currentOffsetX * currentOffsetY * 20) + (currentOffsetX * 10);
+      cornerRotate.set(dynamicRotation);
+    }
+  }, [isDragging, cornerRotate, velocityRotate]);
   
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     const dx = Math.abs(e.clientX - dragStartPos.current.x);
@@ -140,7 +216,11 @@ export default function Hero() {
       }, 5000);
     }
     setIsDragging(false);
-  }, [isDragging]);
+    
+    // Reset rotations with spring physics (recoil effect)
+    cornerRotate.set(0);
+    velocityRotate.set(0);
+  }, [isDragging, cornerRotate, velocityRotate]);
   
   const handleDragStart = () => {
     setIsDragging(true);
@@ -209,13 +289,20 @@ export default function Hero() {
             onMouseLeave={() => setIsHovering(false)}
           >
             <motion.div
+              ref={polaroidRef}
               drag
               dragMomentum={false}
-              dragElastic={0.15}
+              dragElastic={0.25}
               onDragStart={handleDragStart}
               onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
-              style={{ x: springX, y: springY, rotate }}
+              style={{ 
+                x: springX, 
+                y: springY, 
+                rotate: totalRotation,
+                transformOrigin: `${50 + grabOffset.current.x * 30}% ${50 + grabOffset.current.y * 30}%`,
+              }}
               whileHover={{ scale: 1.02 }}
               whileDrag={{ scale: 1.05, cursor: "grabbing" }}
               className="relative group cursor-grab active:cursor-grabbing touch-none select-none"

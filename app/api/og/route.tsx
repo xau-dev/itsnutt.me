@@ -1,65 +1,27 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 
-function getPostMeta(slug: string) {
-  const fullPath = path.join(process.cwd(), "content", "blogs", `${slug}.md`);
-  if (!fs.existsSync(fullPath)) return null;
-  const file = fs.readFileSync(fullPath, "utf8");
-  const { data } = matter(file);
-  return {
-    title: data.title as string,
-    excerpt: data.excerpt as string,
-    date: data.date as string,
-    readTime: data.readTime as string,
-    tags: (data.tags as string[]) || [],
-    thumbnail: data.thumbnail as string | undefined,
-  };
-}
+export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const slug = searchParams.get("slug");
 
-  if (!slug) {
-    return new Response("Missing slug", { status: 400 });
-  }
+  const title = searchParams.get("title") || "Blog Post";
+  const excerpt = searchParams.get("excerpt") || "";
+  const date = searchParams.get("date") || "";
+  const readTime = searchParams.get("readTime") || "";
+  const tagsParam = searchParams.get("tags") || "";
+  const tags = tagsParam ? tagsParam.split(",") : [];
 
-  const post = getPostMeta(slug);
-  if (!post) {
-    return new Response("Post not found", { status: 404 });
-  }
+  const origin = req.url ? new URL(req.url).origin : "https://itsnutt.me";
 
-  const fontDir = path.join(process.cwd(), "public", "fonts");
-
-  const domaineFont = fs.readFileSync(
-    path.join(fontDir, "TestDomaineDisplayCondensed-Semibold-BF66174a2168254.otf")
-  );
-  const aeonikRegular = fs.readFileSync(
-    path.join(fontDir, "Aeonik-Regular.ttf")
-  );
-  const aeonikMedium = fs.readFileSync(
-    path.join(fontDir, "Aeonik-Medium.ttf")
-  );
-
-  const gridBg = `
-    repeating-linear-gradient(
-      to right,
-      transparent,
-      transparent 63px,
-      rgba(255, 255, 255, 0.03) 63px,
-      rgba(255, 255, 255, 0.03) 64px
+  // Fetch fonts via HTTP (public files are served statically)
+  const [domaineFont, aeonikRegular] = await Promise.all([
+    fetch(`${origin}/fonts/TestDomaineDisplayCondensed-Semibold-BF66174a2168254.otf`).then(
+      (r) => r.arrayBuffer()
     ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 63px,
-      rgba(255, 255, 255, 0.03) 63px,
-      rgba(255, 255, 255, 0.03) 64px
-    )
-  `;
+    fetch(`${origin}/fonts/Aeonik-Regular.ttf`).then((r) => r.arrayBuffer()),
+  ]);
 
   return new ImageResponse(
     (
@@ -70,11 +32,47 @@ export async function GET(req: NextRequest) {
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#000000",
-          backgroundImage: gridBg,
           padding: "60px",
           position: "relative",
         }}
       >
+        {/* Subtle grid lines using borders */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            opacity: 0.03,
+          }}
+        >
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={`v-${i}`}
+              style={{
+                position: "absolute",
+                left: `${(i + 1) * 5}%`,
+                top: 0,
+                bottom: 0,
+                width: "1px",
+                backgroundColor: "#ffffff",
+              }}
+            />
+          ))}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={`h-${i}`}
+              style={{
+                position: "absolute",
+                top: `${(i + 1) * 8}%`,
+                left: 0,
+                right: 0,
+                height: "1px",
+                backgroundColor: "#ffffff",
+              }}
+            />
+          ))}
+        </div>
+
         {/* Top-right site branding */}
         <div
           style={{
@@ -82,7 +80,7 @@ export async function GET(req: NextRequest) {
             top: "40px",
             right: "60px",
             fontSize: "18px",
-            color: "#737373",
+            color: "#525252",
             fontFamily: "'Aeonik'",
             letterSpacing: "-0.02em",
           }}
@@ -97,13 +95,14 @@ export async function GET(req: NextRequest) {
             flexDirection: "column",
             justifyContent: "center",
             flex: 1,
-            gap: "24px",
+            gap: "28px",
+            zIndex: 1,
           }}
         >
           {/* Tags */}
-          {post.tags.length > 0 && (
+          {tags.length > 0 && (
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              {post.tags.slice(0, 4).map((tag) => (
+              {tags.slice(0, 4).map((tag) => (
                 <span
                   key={tag}
                   style={{
@@ -127,68 +126,75 @@ export async function GET(req: NextRequest) {
           {/* Title */}
           <h1
             style={{
-              fontSize: "56px",
+              fontSize: "58px",
               fontFamily: "'Test Domaine Display Condensed'",
               fontWeight: 600,
               color: "#ffffff",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
               margin: 0,
-              maxWidth: "900px",
+              maxWidth: "1000px",
             }}
           >
-            {post.title}
+            {title}
           </h1>
 
           {/* Excerpt */}
-          <p
-            style={{
-              fontSize: "22px",
-              fontFamily: "'Aeonik'",
-              color: "#a3a3a3",
-              lineHeight: 1.5,
-              margin: 0,
-              maxWidth: "800px",
-            }}
-          >
-            {post.excerpt}
-          </p>
+          {excerpt && (
+            <p
+              style={{
+                fontSize: "22px",
+                fontFamily: "'Aeonik'",
+                color: "#a3a3a3",
+                lineHeight: 1.5,
+                margin: 0,
+                maxWidth: "850px",
+              }}
+            >
+              {excerpt}
+            </p>
+          )}
         </div>
 
         {/* Bottom row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            marginTop: "auto",
-            paddingTop: "40px",
-          }}
-        >
-          <span
+        {(date || readTime) && (
+          <div
             style={{
-              fontSize: "16px",
-              fontFamily: "'Aeonik'",
-              color: "#737373",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              marginTop: "auto",
+              paddingTop: "40px",
+              zIndex: 1,
             }}
           >
-            {new Date(post.date).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </span>
-          <span style={{ color: "#404040", fontSize: "16px" }}>•</span>
-          <span
-            style={{
-              fontSize: "16px",
-              fontFamily: "'Aeonik'",
-              color: "#737373",
-            }}
-          >
-            {post.readTime}
-          </span>
-        </div>
+            {date && (
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontFamily: "'Aeonik'",
+                  color: "#525252",
+                }}
+              >
+                {date}
+              </span>
+            )}
+            {date && readTime && (
+              <span style={{ color: "#404040", fontSize: "16px" }}>•</span>
+            )}
+            {readTime && (
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontFamily: "'Aeonik'",
+                  color: "#525252",
+                }}
+              >
+                {readTime}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     ),
     {
@@ -205,12 +211,6 @@ export async function GET(req: NextRequest) {
           name: "Aeonik",
           data: aeonikRegular,
           weight: 400,
-          style: "normal",
-        },
-        {
-          name: "Aeonik",
-          data: aeonikMedium,
-          weight: 500,
           style: "normal",
         },
       ],

@@ -1,6 +1,6 @@
 ---
-title: "Built My Own Custom MIDI Controller for Fun"
-excerpt: "A small custom MIDI controller project inspired by the OP-1, built with PCB design, soldering, firmware, and a config app."
+title: "test post"
+excerpt: "lol"
 date: "2026-04-26"
 readTime: "3 min read"
 tags: ["PCB", "Designing", "Project"]

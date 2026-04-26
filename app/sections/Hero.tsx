@@ -28,14 +28,14 @@ const polaroids: PolaroidData[] = [
   },
   {
     id: 2,
-    image: "/images/drone.png",
-    caption: "Marine ROV Prototype",
+    image: "/images/logs/first.jpg",
+    caption: "WIP drone",
     bgColor: "bg-stone-100",
   },
   {
     id: 3,
-    image: "/images/test.png",
-    caption: "Autonomous Mobile Robot",
+    image: "/images/blogs/foxglove-screen.png",
+    caption: "Debuging ArUco code for auto landing",
     bgColor: "bg-zinc-100",
   },
 ];

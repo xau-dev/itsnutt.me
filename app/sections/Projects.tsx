@@ -7,8 +7,8 @@ import SkeletonImage from "../components/SkeletonImage";
 const projects = [
   {
     title: "Autonomous Delivery Drone System",
-    image: "/images/test.png",
-    href: "#",
+    image: "/images/logs/soldering.jpg",
+    href: "/blogs/autonomous-drones-ros-ardupilot",
   },
   {
     title: "Water Surface Autonomous Drone",
@@ -16,9 +16,9 @@ const projects = [
     href: "#",
   },
   {
-    title: "Autonomous Mobile Robot (LiDAR + Depth Vision)",
-    image: "/images/test.png",
-    href: "#",
+    title: "Custom Midi Controller",
+    image: "/images/blogs/midi.png",
+    href: "/blogs/custom-midi-controller",
   },
 ];
 

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       siteName: "itsnutt.me",
       images: [
         {
-          url: `/images/og/${slug}.png`,
+          url: `/api/og?slug=${slug}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       card: "summary_large_image",
       title: `${post.title} | Nutt`,
       description: post.excerpt,
-      images: [`/images/og/${slug}.png`],
+      images: [`/api/og?slug=${slug}`],
     },
   };
 }

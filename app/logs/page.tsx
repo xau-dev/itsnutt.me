@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ScrollReveal from "../components/ScrollReveal";
+import Footer from "../components/Footer";
 
 interface GalleryItem {
   id: string;
@@ -258,6 +259,7 @@ export default function GalleryPage() {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 ---
 title: "Building an Autonomous Drone with ROS and ArduPilot"
 excerpt: "My autonomous drone project using ArduPilot, ROS 2, MAVLink, Raspberry Pi, and vision based landing."
-date: "2026-01-15"
+date: "2026-04-26"
 readTime: "4 min read"
 tags: ["Robotics", "Drones", "Project"]
 thumbnail: "/images/drone.png"
@@ -11,7 +11,7 @@ thumbnail: "/images/drone.png"
 
 **Status now:** The main hardware is done. Right now I am focusing on **auto takeoff**, **auto landing**, and making the system reliable in real tests.
 
-![Drone setup showing flight controller, Raspberry Pi, and camera](/images/drone.png)
+![Drone setup showing flight controller, Raspberry Pi, and camera](/images/blogs/gopro.png)
 
 MicroAir H743 running ArduPilot with AM32 ESCs, Raspberry Pi 4, ROS 2, and a depth camera.
 
@@ -29,6 +29,10 @@ For telemetry and manual control, I am using **2.4GHz LoRa** instead of the usua
 
 I separated them because I do not want experimental code directly controlling the flight controller. The flight controller should stay reliable, while the onboard computer handles the higher level logic.
 
+![Uav Log viewer ardupilot](/images/blogs/uavlog.png)
+
+Logs from our recent flights
+
 ## Main Challenges
 
 The first challenge is **communication**. MAVLink works well, but the link still needs to stay stable during real flight. I use **UART at 921600 baud** for onboard communication and lowered the packet rate to avoid flooding the connection.
@@ -45,9 +49,10 @@ Right now, the **main hardware build is finished**. The project has the ArduPilo
 
 The drone is **not fully done yet**. The main focus is making takeoff, landing, and vision guidance reliable enough for repeated testing.
 
-![ArUco code test reading screenshot from foxglove](/images/foxglove-screen.png)
+![ArUco code test reading screenshot from foxglove](/images/blogs/foxglove-screen.png)
 
 ArUco code detection visualized in Foxglove.
+
 
 ## Next Step
 

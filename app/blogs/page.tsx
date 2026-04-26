@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blogs";
 import ScrollReveal from "../components/ScrollReveal";
 import SkeletonImage from "../components/SkeletonImage";
+import Footer from "../components/Footer";
 
 interface BlogPost {
   slug: string;
@@ -137,6 +138,7 @@ export default async function BlogsPage() {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

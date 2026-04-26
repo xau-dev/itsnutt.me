@@ -25,7 +25,21 @@ function fontSize(title) {
   return '36px';
 }
 
-function card(title) {
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+function card(title, date, tags) {
+  const formattedDate = date ? formatDate(date) : '';
+  const tagsHtml = tags.length > 0 
+    ? tags.map(tag => `<span class="tag">${tag}</span>`).join('')
+    : '';
+  
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -33,6 +47,12 @@ function card(title) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    @font-face {
+      font-family: 'Domaine';
+      src: url('https://itsnutt.me/fonts/TestDomaineDisplayCondensed-Regular-BF66174a213eae4.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       width: 1200px;
@@ -49,39 +69,55 @@ function card(title) {
     }
     .header {
       display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 60px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 40px;
       flex-shrink: 0;
     }
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: ${theme.surface};
-      border: 1px solid ${theme.border};
+    .header-left {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: ${theme.text};
-      font-size: 20px;
-      font-weight: 700;
+      flex-direction: column;
+      gap: 16px;
     }
     .site-name {
       color: ${theme.subtext};
       font-size: 18px;
       font-weight: 500;
       letter-spacing: -0.02em;
+      font-family: 'Inter', sans-serif;
+    }
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .date {
+      color: ${theme.subtext};
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border: 1px solid ${theme.border};
+      background: ${theme.surface};
+      border-radius: 8px;
+      color: ${theme.subtext};
+      font-size: 13px;
+      font-weight: 500;
     }
     .title {
       color: ${theme.text};
       font-size: ${fontSize(title)};
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.03em;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
       flex: 1;
       display: flex;
       align-items: center;
+      font-family: 'Domaine', 'Times New Roman', serif;
     }
     .footer {
       display: flex;
@@ -92,25 +128,19 @@ function card(title) {
       margin-top: 48px;
       flex-shrink: 0;
     }
-    .domain { color: ${theme.subtext}; font-size: 18px; font-weight: 500; }
-    .author { color: ${theme.text}; font-size: 18px; font-weight: 600; }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 16px;
-      border: 1px solid ${theme.border};
-      background: ${theme.surface};
-      border-radius: 8px;
-      color: ${theme.subtext};
-      font-size: 14px;
-      font-weight: 500;
-    }
+    .domain { color: ${theme.subtext}; font-size: 18px; font-weight: 500; font-family: 'Inter', sans-serif; }
+    .author { color: ${theme.text}; font-size: 18px; font-weight: 600; font-family: 'Inter', sans-serif; }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">N</div>
-    <div class="site-name">itsnutt.me</div>
+    <div class="header-left">
+      <div class="site-name">itsnutt.me</div>
+      <div class="meta">
+        ${formattedDate ? `<span class="date">${formattedDate}</span>` : ''}
+        ${tagsHtml}
+      </div>
+    </div>
   </div>
   <div class="title">${title.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}</div>
   <div class="footer">
@@ -139,7 +169,10 @@ function parseFrontMatter(content) {
   const title = yaml.match(/^title:\s*["']?(.+?)["']?\s*$/m)?.[1];
   const slug  = yaml.match(/^slug:\s*["']?(.+?)["']?\s*$/m)?.[1];
   const draft = /^draft:\s*true/m.test(yaml);
-  return { title, slug, draft };
+  const date = yaml.match(/^date:\s*["']?(.+?)["']?\s*$/m)?.[1];
+  const tagsMatch = yaml.match(/^tags:\s*\[(.*?)\]/m);
+  const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim().replace(/["']/g, '')) : [];
+  return { title, slug, draft, date, tags };
 }
 
 function getSlug(filePath, fm) {
@@ -167,7 +200,7 @@ async function main() {
     const out  = path.join(OUTPUT_DIR, `${slug}.png`);
 
     process.stdout.write(`  ${slug} ... `);
-    await page.setContent(card(fm.title), { waitUntil: 'networkidle' });
+    await page.setContent(card(fm.title, fm.date, fm.tags), { waitUntil: 'networkidle' });
     await page.screenshot({ path: out, type: 'png' });
     console.log('done');
     generated++;

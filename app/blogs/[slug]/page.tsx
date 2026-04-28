@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllSlugs } from "@/lib/blogs";
 import ScrollReveal from "../../components/ScrollReveal";
+import TableOfContents from "../../components/TableOfContents";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -94,6 +95,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           </div>
         </ScrollReveal>
+
+        {post.headings.length > 0 && (
+          <ScrollReveal direction="up" delay={0.15}>
+            <div
+              className="mb-10 p-5 border border-neutral-800 bg-neutral-900/30"
+              style={{ borderRadius: "15px" }}
+            >
+              <TableOfContents headings={post.headings} />
+            </div>
+          </ScrollReveal>
+        )}
 
         <ScrollReveal direction="up" delay={0.2}>
           <article

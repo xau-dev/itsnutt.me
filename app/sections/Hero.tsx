@@ -271,7 +271,7 @@ export default function Hero() {
   ];
 
   return (
-    <section id="home" className="px-4 sm:px-8 md:px-16 lg:px-24 pt-32 sm:pt-40 pb-0 overflow-visible">
+    <section id="home" className="px-4 sm:px-8 md:px-16 lg:px-24 pt-16 sm:pt-20 pb-0 overflow-visible">
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 md:gap-10">
         <div className="max-w-2xl md:flex-1">
           <ScrollReveal direction="up" delay={0.1}>
@@ -316,7 +316,7 @@ export default function Hero() {
         </div>
 
         {/* Draggable Polaroid Stack - hidden on mobile */}
-        <ScrollReveal direction="up" delay={0.5} className="hidden md:block">
+        <ScrollReveal direction="up" delay={0.5} className="hidden md:block md:-ml-20 md:mt-6">
           <div 
             ref={containerRef}
             className="relative w-full md:w-auto flex justify-center md:justify-start"

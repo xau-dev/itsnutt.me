@@ -7,6 +7,12 @@ import remarkGfm from "remark-gfm";
 const html = (remarkHtml as any).default || remarkHtml;
 const gfm = (remarkGfm as any).default || remarkGfm;
 
+export interface Heading {
+  id: string;
+  text: string;
+  level: number;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -16,9 +22,43 @@ export interface BlogPost {
   tags: string[];
   thumbnail?: string;
   contentHtml: string;
+  headings: Heading[];
 }
 
 const postsDirectory = path.join(process.cwd(), "content", "blogs");
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-");
+}
+
+function extractHeadings(html: string): { contentHtml: string; headings: Heading[] } {
+  const headings: Heading[] = [];
+  const usedSlugs = new Set<string>();
+
+  // Match h2 and h3 tags
+  const headingRegex = /<h([23])>([^<]+)<\/h\1>/g;
+
+  const contentHtml = html.replace(headingRegex, (match, level: string, text: string) => {
+    let id = slugify(text);
+    // Deduplicate slugs
+    let counter = 1;
+    const baseId = id;
+    while (usedSlugs.has(id)) {
+      id = `${baseId}-${counter}`;
+      counter++;
+    }
+    usedSlugs.add(id);
+
+    headings.push({ id, text: text.trim(), level: parseInt(level, 10) });
+    return `<h${level} id="${id}">${text}</h${level}>`;
+  });
+
+  return { contentHtml, headings };
+}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -40,7 +80,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const { data, content } = matter(fileContents);
 
   const processedContent = await remark().use(gfm).use(html).process(content);
-  const contentHtml = processedContent.toString();
+  const rawHtml = processedContent.toString();
+  const { contentHtml, headings } = extractHeadings(rawHtml);
 
   return {
     slug,
@@ -51,6 +92,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     tags: data.tags,
     thumbnail: data.thumbnail,
     contentHtml,
+    headings,
   };
 }
 

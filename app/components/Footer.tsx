@@ -159,7 +159,7 @@ export default function Footer() {
                   height={31}
                   className="rounded"
                 />
-              </Link>             
+              </Link>
             </div>
           </div>
         </ScrollReveal>

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "motion/react";
 import ScrollReveal from "../components/ScrollReveal";
 import SkeletonImage from "../components/SkeletonImage";
 
@@ -57,6 +57,7 @@ export default function Hero() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [hasDragged, setHasDragged] = useState(false);
+  const [zoomedIndex, setZoomedIndex] = useState<number | null>(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -227,6 +228,40 @@ export default function Hero() {
     setHasDragged(true);
   };
 
+  // Double-click to zoom
+  const handleDoubleClick = useCallback(() => {
+    setZoomedIndex(currentIndex);
+  }, [currentIndex]);
+
+  // Close zoom on escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setZoomedIndex(null);
+      if (zoomedIndex !== null) {
+        if (e.key === "ArrowLeft") {
+          setZoomedIndex((prev) => (prev !== null ? (prev - 1 + polaroids.length) % polaroids.length : null));
+        }
+        if (e.key === "ArrowRight") {
+          setZoomedIndex((prev) => (prev !== null ? (prev + 1) % polaroids.length : null));
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [zoomedIndex]);
+
+  // Lock body scroll when zoomed
+  useEffect(() => {
+    if (zoomedIndex !== null) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [zoomedIndex]);
+
   // Get visible polaroids (current + 3 back layers)
   const visiblePolaroids = [
     polaroids[currentIndex],
@@ -297,6 +332,7 @@ export default function Hero() {
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerUp}
+              onDoubleClick={handleDoubleClick}
               style={{ 
                 x: springX, 
                 y: springY, 
@@ -338,6 +374,28 @@ export default function Hero() {
                       </path>
                     </svg>
                     <span className="text-neutral-300 text-xs font-medium whitespace-nowrap">Try dragging me</span>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Double-click zoom hint */}
+              {isHovering && !isDragging && hasDragged && (
+                <motion.div
+                  className="absolute pointer-events-none z-50"
+                  style={{
+                    left: mousePos.x + 25,
+                    top: mousePos.y - 50,
+                  }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-800/90 backdrop-blur-sm rounded-full border border-neutral-700 shadow-lg">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-neutral-400">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span className="text-neutral-300 text-xs font-medium whitespace-nowrap">Double-click to zoom</span>
                   </div>
                 </motion.div>
               )}
@@ -408,6 +466,109 @@ export default function Hero() {
           </div>
         </ScrollReveal>
       </div>
+
+      {/* Zoom Modal */}
+      <AnimatePresence>
+        {zoomedIndex !== null && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Backdrop */}
+            <motion.div
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+              onClick={() => setZoomedIndex(null)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* Close button */}
+            <motion.button
+              className="absolute top-6 right-6 z-10 p-2 rounded-full bg-neutral-800/80 border border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700/80 transition-colors cursor-pointer"
+              onClick={() => setZoomedIndex(null)}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ delay: 0.1 }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </motion.button>
+
+            {/* Navigation arrows */}
+            <motion.button
+              className="absolute left-4 sm:left-8 z-10 p-3 rounded-full bg-neutral-800/80 border border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700/80 transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomedIndex((prev) => (prev !== null ? (prev - 1 + polaroids.length) % polaroids.length : null));
+              }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ delay: 0.15 }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </motion.button>
+
+            <motion.button
+              className="absolute right-4 sm:right-8 z-10 p-3 rounded-full bg-neutral-800/80 border border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-700/80 transition-colors cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomedIndex((prev) => (prev !== null ? (prev + 1) % polaroids.length : null));
+              }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ delay: 0.15 }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </motion.button>
+
+            {/* Zoomed Polaroid */}
+            <motion.div
+              className="relative z-10 w-[85vw] max-w-2xl"
+              initial={{ scale: 0.6, opacity: 0, rotate: -5 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              exit={{ scale: 0.6, opacity: 0, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`${polaroids[zoomedIndex].bgColor} rounded-sm p-4 sm:p-6 pb-6 sm:pb-8 shadow-2xl`}>
+                <div className="relative w-full aspect-square bg-neutral-200 overflow-hidden rounded-sm">
+                  <SkeletonImage
+                    src={polaroids[zoomedIndex].image}
+                    alt={polaroids[zoomedIndex].caption}
+                    fill
+                    className="object-cover"
+                    priority
+                    draggable={false}
+                  />
+                </div>
+                <p className="text-neutral-700 text-sm sm:text-base mt-4 text-center" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                  {polaroids[zoomedIndex].caption}
+                </p>
+              </div>
+
+              {/* Counter */}
+              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                <span className="text-neutral-400 text-sm font-medium">
+                  {zoomedIndex + 1} / {polaroids.length}
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
